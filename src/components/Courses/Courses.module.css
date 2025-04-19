@@ -1,0 +1,22 @@
+.wrapper {
+	padding: 40px 60px;
+	background-color: #F7F7F7;
+}
+
+.container {
+	max-width: 85%;
+	margin: 0 auto;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 30px;
+}
+
+.cardsContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+}

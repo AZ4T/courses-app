@@ -1,0 +1,45 @@
+.wrapper {
+	display: flex;
+	justify-content: center;
+	padding: 40px 20px;
+}
+
+.card {
+	width: 100%;
+	max-width: 800px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	background-color: white;
+	padding: 30px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.title {
+	font-size: 24px;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+.section {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 20px;
+}
+
+.sectionLeft {
+	flex: 2;
+}
+
+.sectionRight {
+	flex: 1;
+	text-align: left;
+	font-size: 14px;
+}
+
+.metaItem {
+	margin-bottom: 10px;
+}
+
+.backButton {
+	margin-top: 20px;
+}

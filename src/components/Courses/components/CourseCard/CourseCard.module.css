@@ -1,0 +1,32 @@
+.card {
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-left: 7px solid #333E48;
+	border-radius: 5px;
+	padding: 25px 25px;
+	box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.title {
+	font-size: 20px;
+	font-weight: 700;
+	margin-bottom: 15px;
+}
+
+.body {
+	display: flex;
+	gap: 40px;
+}
+
+.description {
+	max-width: 65%;
+}
+
+.meta_info {
+	color: #333E48;
+	margin-bottom: 30px;
+}
+
+.buttons {
+	display: flex;
+	gap: 10px;
+}
