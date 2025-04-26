@@ -1,0 +1,26 @@
+.container {
+    margin-bottom: 25px;
+}
+
+.label {
+    color: #333E48;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.input {
+    padding: 10px;
+    border: 1px solid #CFCFCF;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.inputError {
+    border-color: #e74c3c;
+}
+
+.errorText {
+    margin-top: 0.25rem;
+    color: #e74c3c;
+    font-size: 0.875rem;
+}

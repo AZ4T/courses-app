@@ -1,0 +1,80 @@
+.container {
+    min-height: 85vh;
+    padding: 50px 0;
+    background-color: #F7F7F7;
+}
+
+.wrapper {
+    max-width: 75%;
+    margin: 0 auto;
+}
+
+.title {
+    margin-bottom: 30px;
+    color: #333E48;
+    font-weight: 700;
+    font-size: 30px;
+    text-align: left;
+}
+
+.form_container {
+    border: 1px solid #CFCFCF;
+    border-radius: 4px;
+    background: white;
+    padding: 60px 100px;
+}
+
+.course_buttons {
+    text-align: right;
+    padding: 20px 0px;
+}
+.course_buttons button + button {
+    margin-left: 20px;
+}
+
+.title_formInfo {
+    color: #333E48;
+    font-size: 25px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.description {
+    padding-bottom: 100px;
+}
+
+.duration {
+    flex: 1;
+    margin-right: 0.5em;
+}
+
+.duration_container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.duration_text {
+    white-space: nowrap;;
+}
+
+.authors_container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.authors_title {
+    color: #333E48;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.course_authors {
+    text-align: center;
+}
+
+.create_author {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}

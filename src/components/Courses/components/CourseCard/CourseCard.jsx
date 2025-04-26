@@ -31,8 +31,8 @@ export default function CourseCard({ course, authors, onShowCourse }) {
 							buttonText="Show course"
 							onClick={() => onShowCourse(course.id)}
 						/>
-						<Button buttonText="1" />
-						<Button buttonText="2" />
+						{/* <Button buttonText="1" />
+						<Button buttonText="2" /> */}
 					</div>
 				</div>
 			</div>

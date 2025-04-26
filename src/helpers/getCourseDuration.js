@@ -1,9 +1,7 @@
-export default function getCourseDuration(date) {
-	const hh = Math.floor(date / 60);
-	const mm = date % 60;
-	let duration = hh < 10 ? '0' : hh;
-	duration += ':';
-	duration += mm < 10 ? '0' : mm;
-	duration += hh === 1 ? ' hour' : ' hours';
-	return duration;
+export default function getCourseDuration(durationStr = '') {
+	const totalMinutes = parseInt(durationStr, 10) || 0;
+	const hours = Math.floor(totalMinutes / 60);
+	const minutes = totalMinutes % 60;
+	const pad = (n) => n.toString().padStart(2, '0');
+	return `${pad(hours)}:${pad(minutes)}`;
 }
