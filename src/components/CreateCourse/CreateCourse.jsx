@@ -4,7 +4,7 @@ import styles from './CreateCourse.module.css';
 import AuthorItem from './AuthorItem/AuthorItem';
 import { useState } from 'react';
 import getCourseDuration from '../../helpers/getCourseDuration';
-import generateId from '../../helpers/generateId';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function CreateCourse({ initialAuthorList = [] }) {
 	const [form, setForm] = useState({
@@ -74,7 +74,7 @@ export default function CreateCourse({ initialAuthorList = [] }) {
 		}
 
 		const newCourse = {
-			id: generateId(),
+			id: uuidv4(),
 			title: form.title,
 			description: form.description,
 			duration: parseInt(form.duration, 10),
