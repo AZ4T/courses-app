@@ -5,6 +5,7 @@ import AuthorItem from './AuthorItem/AuthorItem';
 import { useState } from 'react';
 import getCourseDuration from '../../helpers/getCourseDuration';
 import { v4 as uuidv4 } from 'uuid';
+import formatDate from '../../helpers/formatDate';
 
 export default function CreateCourse({ initialAuthorList = [] }) {
 	const [form, setForm] = useState({
@@ -79,7 +80,7 @@ export default function CreateCourse({ initialAuthorList = [] }) {
 			description: form.description,
 			duration: parseInt(form.duration, 10),
 			authors: selectedAuthors,
-			creationDate: new Date().toISOString().slice(0, 10),
+			creationDate: formatDate(),
 		};
 
 		// 1) read
