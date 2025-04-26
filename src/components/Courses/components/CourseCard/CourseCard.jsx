@@ -1,8 +1,9 @@
 import getCourseDuration from '../../../../helpers/getCourseDuration.js';
 import Button from '../../../../common/Button/Button.jsx';
 import styles from './CourseCard.module.css';
+import { Link } from 'react-router-dom';
 
-export default function CourseCard({ course, authors, onShowCourse }) {
+export default function CourseCard({ course, authors }) {
 	const authorNames = course.authors
 		.map((id) => authors.find((a) => a.id === id)?.name)
 		.filter(Boolean)
@@ -27,10 +28,9 @@ export default function CourseCard({ course, authors, onShowCourse }) {
 						</p>
 					</div>
 					<div className={styles.buttons}>
-						<Button
-							buttonText="Show course"
-							onClick={() => onShowCourse(course.id)}
-						/>
+						<Link to={`/courses/${course.id}`}>
+							<Button buttonText="show course" />
+						</Link>
 						{/* <Button buttonText="1" />
 						<Button buttonText="2" /> */}
 					</div>

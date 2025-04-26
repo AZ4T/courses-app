@@ -2,14 +2,20 @@ import styles from './Courses.module.css';
 import CourseCard from './components/CourseCard/CourseCard.jsx';
 import SearchBar from './components/SearchBar/SearchBar.jsx';
 import Button from '../../common/Button/Button.jsx';
+import { mockedAuthorsList, mockedCoursesList } from '../../constants.js';
+import { useNavigate } from 'react-router-dom';
 
-function Courses({ mockedCoursesList, mockedAuthorsList, onShowCourse }) {
+export default function Courses() {
+	const navigate = useNavigate();
 	return (
 		<div className={styles.wrapper}>
 			<div className={styles.container}>
 				<div className={styles.header}>
 					<SearchBar />
-					<Button buttonText="Add new course" />
+					<Button
+						onClick={() => navigate('/courses/add')}
+						buttonText="Add new course"
+					/>
 				</div>
 
 				<div className={styles.cardsContainer}>
@@ -18,7 +24,6 @@ function Courses({ mockedCoursesList, mockedAuthorsList, onShowCourse }) {
 							key={course.id}
 							course={course}
 							authors={mockedAuthorsList}
-							onShowCourse={onShowCourse}
 						/>
 					))}
 				</div>
@@ -26,5 +31,3 @@ function Courses({ mockedCoursesList, mockedAuthorsList, onShowCourse }) {
 		</div>
 	);
 }
-
-export default Courses;

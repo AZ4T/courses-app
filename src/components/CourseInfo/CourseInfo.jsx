@@ -1,8 +1,13 @@
+import { useParams, Link } from 'react-router-dom';
 import getCourseDuration from '../../helpers/getCourseDuration';
 import Button from '../../common/Button/Button';
 import styles from './CourseInfo.module.css';
 
 export default function CourseInfo({ course, authors }) {
+	const { courseId } = useParams();
+	if (!course || !authors) {
+		return <p>Loading…</p>;
+	}
 	const authorNames = course.authors
 		.map((id) => {
 			const author = authors.find((a) => a.id === id);
@@ -45,7 +50,9 @@ export default function CourseInfo({ course, authors }) {
 				</div>
 
 				<div className={styles.backButton}>
-					<Button buttonText="Back" onClick={() => {}} />
+					<Link to="/courses">
+						<Button buttonText="back" />
+					</Link>
 				</div>
 			</div>
 		</div>

@@ -28,7 +28,7 @@
     text-align: right;
     padding: 20px 0px;
 }
-.course_buttons button + button {
+.course_buttons * + * {
     margin-left: 20px;
 }
 

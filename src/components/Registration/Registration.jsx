@@ -2,8 +2,10 @@ import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
 import styles from './Registration.module.css';
 import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function Registration() {
+	const navigate = useNavigate();
 	const [form, setForm] = useState({
 		name: '',
 		email: '',
@@ -17,13 +19,27 @@ export default function Registration() {
 		setErrors((err) => ({ ...err, [name]: '' }));
 	};
 
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
 		const newErrors = {};
 		if (!form.name) newErrors.name = 'Name is required!';
 		if (!form.email) newErrors.email = 'Email is required!';
 		if (!form.password) newErrors.password = 'Password is required!';
 		setErrors(newErrors);
+
+		try {
+			const resp = await fetch('http://localhost:4000/register', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(form),
+			});
+			const result = await resp.json();
+			if (!resp.ok)
+				throw new Error(result.message || 'Registration failed');
+			navigate('/login');
+		} catch (err) {
+			setErrors(err.message);
+		}
 	};
 
 	return (
@@ -66,7 +82,8 @@ export default function Registration() {
 						/>
 					</form>
 					<p className={styles.login_link}>
-						If you have an account you may <a href="#">Login</a>
+						If you have an account you may{' '}
+						<Link to="/login">Login</Link>
 					</p>
 				</div>
 			</div>

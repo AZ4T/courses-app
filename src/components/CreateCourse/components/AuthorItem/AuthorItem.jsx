@@ -1,5 +1,5 @@
-import plus from '../../../assets/plus.png';
-import trash from '../../../assets/trash.png';
+import plus from '../../../../assets/plus.png';
+import trash from '../../../../assets/trash.png';
 import styles from './AuthorItem.module.css';
 
 export default function AuthorItem({

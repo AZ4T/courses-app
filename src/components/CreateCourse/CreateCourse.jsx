@@ -1,13 +1,16 @@
 import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
 import styles from './CreateCourse.module.css';
-import AuthorItem from './AuthorItem/AuthorItem';
+import AuthorItem from './components/AuthorItem/AuthorItem';
 import { useState } from 'react';
 import getCourseDuration from '../../helpers/getCourseDuration';
 import { v4 as uuidv4 } from 'uuid';
 import formatDate from '../../helpers/formatDate';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function CreateCourse({ initialAuthorList = [] }) {
+	const navigate = useNavigate();
+
 	const [form, setForm] = useState({
 		title: '',
 		description: '',
@@ -92,6 +95,8 @@ export default function CreateCourse({ initialAuthorList = [] }) {
 
 		// 3) write back
 		localStorage.setItem('courses', JSON.stringify(courses));
+
+		navigate('/courses');
 	};
 
 	return (
@@ -199,7 +204,9 @@ export default function CreateCourse({ initialAuthorList = [] }) {
 					</div>
 
 					<div className={styles.course_buttons}>
-						<Button buttonText="cancel" />
+						<Link to="/courses">
+							<Button buttonText="cancel" />
+						</Link>
 						<Button buttonText="create course" type="submit" />
 					</div>
 				</form>

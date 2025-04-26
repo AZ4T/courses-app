@@ -2,13 +2,16 @@ import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
 import styles from './Login.module.css';
 import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function Login() {
 	const [form, setForm] = useState({
+		name: '',
 		email: '',
 		password: '',
 	});
 	const [errors, setErrors] = useState({});
+	const navigate = useNavigate();
 
 	const handleChange = (event) => {
 		const { name, value } = event.target;
@@ -16,12 +19,31 @@ export default function Login() {
 		setErrors((err) => ({ ...err, [name]: '' }));
 	};
 
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
 		const newErrors = {};
 		if (!form.email) newErrors.email = 'Email is required!';
 		if (!form.password) newErrors.password = 'Password is required!';
 		setErrors(newErrors);
+		try {
+			const resp = await fetch('http://localhost:4000/login', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					email: form.email,
+					password: form.password,
+					name: form.name,
+				}),
+			});
+			const { result, user, message } = await resp.json();
+			if (!resp.ok) throw new Error(message || 'Login failed');
+			localStorage.setItem('token', result);
+			localStorage.setItem('userName', user.name);
+			console.log('🔑 login succeeded, redirecting…');
+			navigate('/courses');
+		} catch (err) {
+			alert(err);
+		}
 	};
 
 	return (
@@ -55,7 +77,8 @@ export default function Login() {
 						/>
 					</form>
 					<p className={styles.login_link}>
-						If you have an account you may <a href="#">Register</a>
+						If you don't have an account you may{' '}
+						<Link to="/registration">Register</Link>
 					</p>
 				</div>
 			</div>
