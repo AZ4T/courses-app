@@ -26,7 +26,6 @@ export default function Registration() {
 		if (!form.email) newErrors.email = 'Email is required!';
 		if (!form.password) newErrors.password = 'Password is required!';
 		setErrors(newErrors);
-
 		try {
 			const resp = await fetch('http://localhost:4000/register', {
 				method: 'POST',
@@ -78,7 +77,7 @@ export default function Registration() {
 						<Button
 							type="submit"
 							className={styles.button}
-							buttonText="Login"
+							buttonText="Register"
 						/>
 					</form>
 					<p className={styles.login_link}>

@@ -2,12 +2,20 @@ import getCourseDuration from '../../../../helpers/getCourseDuration.js';
 import Button from '../../../../common/Button/Button.jsx';
 import styles from './CourseCard.module.css';
 import { Link } from 'react-router-dom';
+import { useAppDispatch } from '../../../../store/hooks.ts';
+import { saveCoursesAction } from '../../../../store/courses/actions.ts';
 
 export default function CourseCard({ course, authors }) {
 	const authorNames = course.authors
 		.map((id) => authors.find((a) => a.id === id)?.name)
 		.filter(Boolean)
 		.join(', ');
+
+	const dispatch = useAppDispatch();
+
+	const handleDelete = () => {
+		dispatch(saveCoursesAction([]));
+	};
 
 	return (
 		<div className={styles.card}>
@@ -31,8 +39,8 @@ export default function CourseCard({ course, authors }) {
 						<Link to={`/courses/${course.id}`}>
 							<Button buttonText="show course" />
 						</Link>
-						{/* <Button buttonText="1" />
-						<Button buttonText="2" /> */}
+						<Button buttonText="delete" onClick={handleDelete} />
+						<Button buttonText="update" />
 					</div>
 				</div>
 			</div>

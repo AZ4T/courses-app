@@ -2,16 +2,19 @@ import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
 import styles from './Login.module.css';
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../store/hooks.ts';
+import { saveUserAction } from '../../store/user/actions.ts';
 
 export default function Login() {
+	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
 	const [form, setForm] = useState({
 		name: '',
 		email: '',
 		password: '',
 	});
 	const [errors, setErrors] = useState({});
-	const navigate = useNavigate();
 
 	const handleChange = (event) => {
 		const { name, value } = event.target;
@@ -32,13 +35,21 @@ export default function Login() {
 				body: JSON.stringify({
 					email: form.email,
 					password: form.password,
-					name: form.name,
+					name: '',
 				}),
 			});
-			const { result, user, message } = await resp.json();
+			const data = await resp.json();
+			const { result, user, message } = data;
 			if (!resp.ok) throw new Error(message || 'Login failed');
+			dispatch(
+				saveUserAction({
+					isAuth: true,
+					name: user.name,
+					email: user.email,
+					token: result,
+				})
+			);
 			localStorage.setItem('token', result);
-			localStorage.setItem('userName', user.name);
 			console.log('🔑 login succeeded, redirecting…');
 			navigate('/courses');
 		} catch (err) {

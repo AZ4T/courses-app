@@ -2,17 +2,25 @@ import { useParams, Link } from 'react-router-dom';
 import getCourseDuration from '../../helpers/getCourseDuration';
 import Button from '../../common/Button/Button';
 import styles from './CourseInfo.module.css';
+import { useAppSelector } from '../../store/hooks.ts';
+import { getCourseById } from '../../store/courses/selectors.ts';
+import { getAuthors } from '../../store/authors/selectors.ts';
 
-export default function CourseInfo({ course, authors }) {
+export default function CourseInfo() {
 	const { courseId } = useParams();
+	const course = useAppSelector(getCourseById(courseId));
+	const authors = useAppSelector(getAuthors);
+
 	if (!course || !authors) {
 		return <p>Loading…</p>;
 	}
+
+	if (!course) {
+		return <p className={styles.wrapper}>Course not found</p>;
+	}
+
 	const authorNames = course.authors
-		.map((id) => {
-			const author = authors.find((a) => a.id === id);
-			return author?.name;
-		})
+		.map((id) => authors.find((a) => a.id === id)?.name)
 		.filter(Boolean)
 		.join(', ');
 

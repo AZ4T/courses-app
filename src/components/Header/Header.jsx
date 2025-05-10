@@ -1,31 +1,31 @@
-import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Logo from './components/Logo/Logo.jsx';
 import Button from '../../common/Button/Button.jsx';
 import styles from './Header.module.css';
+import { saveUserAction } from '../../store/user/actions.ts';
+import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
+import { getUserName } from '../../store/user/selectors.ts';
 
 export default function Header() {
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
-	const [user, setUser] = useState(null);
-
-	useEffect(() => {
-		const token = localStorage.getItem('token');
-		const userName = localStorage.getItem('userName');
-		if (token) {
-			setUser({ name: userName });
-		} else {
-			setUser(null);
-		}
-	}, [pathname]);
+	const dispatch = useAppDispatch();
+	const userName = useAppSelector(getUserName);
 
 	if (['/login', '/registration'].includes(pathname)) {
 		return null;
 	}
 
 	const handleLogout = () => {
-		localStorage.removeItem('token');
-		localStorage.removeItem('userName');
+		dispatch(
+			saveUserAction({
+				isAuth: false,
+				name: '',
+				email: '',
+				token: '',
+			})
+		);
+		localStorage.setItem('token', '');
 		navigate('/login', { replace: true });
 	};
 
@@ -35,12 +35,10 @@ export default function Header() {
 				<Link to="/courses">
 					<Logo />
 				</Link>
-				{user && (
-					<div>
-						{user.name}!{' '}
-						<Button onClick={handleLogout} buttonText="Logout" />
-					</div>
-				)}
+				<div>
+					{userName}
+					<Button onClick={handleLogout} buttonText="Logout" />
+				</div>
 			</nav>
 		</header>
 	);

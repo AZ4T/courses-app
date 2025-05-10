@@ -1,4 +1,5 @@
-import { Navigate, Routes, Route, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Navigate, Routes, Route } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Courses from './components/Courses/Courses';
 import CourseInfo from './components/CourseInfo/CourseInfo';
@@ -6,25 +7,32 @@ import EmptyCourseList from './components/EmptyCourseList/EmptyCourseList';
 import CreateCourse from './components/CreateCourse/CreateCourse';
 import Registration from './components/Registration/Registration';
 import Login from './components/Login/Login';
-import { mockedAuthorsList, mockedCoursesList } from './constants';
-
-function CourseInfoWrapper() {
-	const { courseId } = useParams();
-	const course = mockedCoursesList.find((c) => c.id === courseId);
-	return <CourseInfo course={course} authors={mockedAuthorsList} />;
-}
+import { useAppDispatch, useAppSelector } from './store/hooks.ts';
+import { getToken } from './store/user/selectors.ts';
+import { saveUserAction } from './store/user/actions.ts';
 
 export default function App() {
-	const token = localStorage.getItem('token');
-
+	const token = useAppSelector(getToken);
+	const dispatch = useAppDispatch();
+	useEffect(() => {
+		const token = localStorage.getItem('token');
+		if (token) {
+			dispatch(
+				saveUserAction({
+					isAuth: true,
+					token,
+					name: localStorage.getItem('userName') || '',
+					email: localStorage.getItem('userEmail') || '',
+				})
+			);
+		}
+	}, [dispatch]);
 	return (
 		<>
 			<Header />
-
 			<Routes>
-				<Route path="/registration" element={<Registration />} />
 				<Route path="/login" element={<Login />} />
-
+				<Route path="/registration" element={<Registration />} />
 				<Route
 					path="/courses"
 					element={
@@ -45,13 +53,12 @@ export default function App() {
 					path="/courses/:courseId"
 					element={
 						token ? (
-							<CourseInfoWrapper />
+							<CourseInfo />
 						) : (
 							<Navigate to="/login" replace />
 						)
 					}
 				/>
-
 				<Route
 					path="/"
 					element={

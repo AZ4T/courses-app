@@ -5,11 +5,15 @@ import AuthorItem from './components/AuthorItem/AuthorItem';
 import { useState } from 'react';
 import getCourseDuration from '../../helpers/getCourseDuration';
 import { v4 as uuidv4 } from 'uuid';
-import formatDate from '../../helpers/formatDate';
+import formatDate from '../../helpers/formatCreationDate.js';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAppDispatch } from '../../store/hooks.ts';
+import { addNewCourseAction } from '../../store/courses/actions.ts';
+import { addNewAuthorAction } from '../../store/authors/actions.ts';
 
 export default function CreateCourse({ initialAuthorList = [] }) {
 	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
 
 	const [form, setForm] = useState({
 		title: '',
@@ -37,9 +41,10 @@ export default function CreateCourse({ initialAuthorList = [] }) {
 			return;
 		}
 		const newAuthor = {
-			id: Math.random().toString(36).slice(2),
+			id: uuidv4(),
 			name: form.authorName.trim(),
 		};
+		dispatch(addNewAuthorAction(newAuthor));
 		setAvailableAuthors((a) => [...a, newAuthor]);
 		setForm((f) => ({ ...f, authorName: '' }));
 	};
@@ -86,15 +91,7 @@ export default function CreateCourse({ initialAuthorList = [] }) {
 			creationDate: formatDate(),
 		};
 
-		// 1) read
-		const stored = localStorage.getItem('courses');
-		const courses = stored ? JSON.parse(stored) : [];
-
-		// 2) append
-		courses.push(newCourse);
-
-		// 3) write back
-		localStorage.setItem('courses', JSON.stringify(courses));
+		dispatch(addNewCourseAction(newCourse));
 
 		navigate('/courses');
 	};
