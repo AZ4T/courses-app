@@ -9,6 +9,7 @@ import { getCourses } from '../../store/courses/selectors.ts';
 import { getAuthors } from '../../store/authors/selectors.ts';
 import { saveAuthorsAction } from '../../store/authors/actions.ts';
 import { saveCoursesAction } from '../../store/courses/actions.ts';
+import EmptyCourseList from '../EmptyCourseList/EmptyCourseList.jsx';
 
 export default function Courses() {
 	const navigate = useNavigate();
@@ -40,6 +41,7 @@ export default function Courses() {
 	}, [dispatch]);
 
 	return (
+		coursesList.length ?
 		<div className={styles.wrapper}>
 			<div className={styles.container}>
 				<div className={styles.header}>
@@ -49,7 +51,6 @@ export default function Courses() {
 						buttonText="Add new course"
 					/>
 				</div>
-
 				<div className={styles.cardsContainer}>
 					{coursesList.map((course) => (
 						<CourseCard
@@ -60,6 +61,6 @@ export default function Courses() {
 					))}
 				</div>
 			</div>
-		</div>
+		</div> : <EmptyCourseList />
 	);
 }
