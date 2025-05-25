@@ -1,7 +1,16 @@
 export const enum CoursesActionTypes {
-	SAVE_COURSES = 'SAVE_COURSES',
-	ADD_COURSE = 'ADD_COURSE',
-	DELETE_COURSE = 'DELETE_COURSE',
+	GET_COURSES_REQUEST = 'GET_COURSES_REQUEST',
+	GET_COURSES_SUCCESS = 'GET_COURSES_SUCCESS',
+	GET_COURSES_FAILURE = 'GET_COURSES_FAILURE',
+	DELETE_COURSE_REQUEST = 'DELETE_COURSE_REQUEST',
+	DELETE_COURSE_SUCCESS = 'DELETE_COURSE_SUCCESS',
+	DELETE_COURSE_FAILURE = 'DELETE_COURSE_FAILURE',
+	ADD_COURSE_REQUEST = 'ADD_COURSE_REQUEST',
+	ADD_COURSE_SUCCESS = 'ADD_COURSE_SUCCESS',
+	ADD_COURSE_FAILURE = 'ADD_COURSE_FAILURE',
+	UPDATE_COURSE_REQUEST = 'UPDATE_COURSE_REQUEST',
+	UPDATE_COURSE_SUCCESS = 'UPDATE_COURSE_SUCCESS',
+	UPDATE_COURSE_FAILURE = 'UPDATE_COURSE_FAILURE',
 }
 
 export type CourseType = {
@@ -17,19 +26,78 @@ export type CourseValues = {
 	payload: string | CourseType | CourseType[];
 };
 
-type SaveCourses = {
-	type: CoursesActionTypes.SAVE_COURSES;
-	payload: CourseType[];
+export type CoursesState = {
+	list: CourseType[];
+	loading: boolean;
+	error: string | null;
 };
 
-type AddCourse = {
-	type: CoursesActionTypes.ADD_COURSE;
-	payload: CourseType;
+export type GetCoursesRequestAction = {
+	type: CoursesActionTypes.GET_COURSES_REQUEST;
 };
 
-type DeleteCourse = {
-	type: CoursesActionTypes.DELETE_COURSE;
+export type GetCoursesFailureAction = {
+	type: CoursesActionTypes.GET_COURSES_FAILURE;
 	payload: string;
 };
 
-export type CoursesAction = SaveCourses | AddCourse | DeleteCourse;
+export type GetCoursesSuccessAction = {
+	type: CoursesActionTypes.GET_COURSES_SUCCESS;
+	payload: CourseType[];
+};
+
+export type DeleteCourseRequestAction = {
+	type: CoursesActionTypes.DELETE_COURSE_REQUEST;
+};
+
+export type DeleteCourseSuccessAction = {
+	type: CoursesActionTypes.DELETE_COURSE_SUCCESS;
+	payload: string;
+};
+
+export type DeleteCourseFailureAction = {
+	type: CoursesActionTypes.DELETE_COURSE_FAILURE;
+	payload: string;
+};
+
+export type AddCourseSuccessAction = {
+	type: CoursesActionTypes.ADD_COURSE_SUCCESS;
+	payload: CourseType;
+};
+
+export type AddCourseFailureAction = {
+	type: CoursesActionTypes.ADD_COURSE_FAILURE;
+	payload: string;
+};
+
+export type AddCourseRequestAction = {
+	type: CoursesActionTypes.ADD_COURSE_REQUEST;
+};
+
+export type UpdateCourseRequestAction = {
+	type: CoursesActionTypes.UPDATE_COURSE_REQUEST;
+};
+
+export type UpdateCourseSuccessAction = {
+	type: CoursesActionTypes.UPDATE_COURSE_SUCCESS;
+	payload: CourseType;
+};
+
+export type UpdateCourseFailureAction = {
+	type: CoursesActionTypes.UPDATE_COURSE_FAILURE;
+	payload: string;
+};
+
+export type CoursesAction =
+	| GetCoursesSuccessAction
+	| GetCoursesRequestAction
+	| GetCoursesFailureAction
+	| DeleteCourseRequestAction
+	| DeleteCourseSuccessAction
+	| DeleteCourseFailureAction
+	| AddCourseSuccessAction
+	| AddCourseFailureAction
+	| AddCourseRequestAction
+	| UpdateCourseRequestAction
+	| UpdateCourseSuccessAction
+	| UpdateCourseFailureAction;

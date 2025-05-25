@@ -1,20 +1,28 @@
 import getCourseDuration from '../../../../helpers/getCourseDuration.js';
 import Button from '../../../../common/Button/Button.jsx';
 import styles from './CourseCard.module.css';
-import { Link } from 'react-router-dom';
-import { useAppDispatch } from '../../../../store/hooks.ts';
-import { saveCoursesAction } from '../../../../store/courses/actions.ts';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../../../store/hooks.ts';
+import { deleteCourse } from '../../../../store/courses/thunk.ts';
+import { getRole } from '../../../../store/user/selectors.ts';
 
 export default function CourseCard({ course, authors }) {
-	const authorNames = course.authors
+	const navigate = useNavigate();
+	const authorNames = (course.authors ?? [])
 		.map((id) => authors.find((a) => a.id === id)?.name)
 		.filter(Boolean)
 		.join(', ');
 
 	const dispatch = useAppDispatch();
-
+	const role = useAppSelector(getRole);
 	const handleDelete = () => {
-		dispatch(saveCoursesAction([]));
+		if (window.confirm('Are you sure you want to delete this course?')) {
+			dispatch(deleteCourse(course.id));
+		}
+	};
+
+	const handleUpdate = () => {
+		navigate(`/courses/update/${course.id}`);
 	};
 
 	return (
@@ -39,8 +47,20 @@ export default function CourseCard({ course, authors }) {
 						<Link to={`/courses/${course.id}`}>
 							<Button buttonText="show course" />
 						</Link>
-						<Button buttonText="delete" onClick={handleDelete} />
-						<Button buttonText="update" />
+						{role === 'admin' ? (
+							<>
+								<Button
+									buttonText="delete"
+									onClick={handleDelete}
+								/>
+								<Button
+									buttonText="update"
+									onClick={handleUpdate}
+								/>
+							</>
+						) : (
+							''
+						)}
 					</div>
 				</div>
 			</div>

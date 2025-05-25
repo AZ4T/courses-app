@@ -1,19 +1,27 @@
+// src/components/CourseForm/CourseForm.jsx
+import { useState, useEffect } from 'react';
+import { useNavigate, Link, useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
+import { getAuthorsList } from '../../store/authors/selectors.ts';
+import { addAuthor, fetchAllAuthors } from '../../store/authors/thunk.ts';
+import { addCourse, updateCourse } from '../../store/courses/thunk.ts';
 import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
-import styles from './CreateCourse.module.css';
 import AuthorItem from './components/AuthorItem/AuthorItem';
-import { useState } from 'react';
 import getCourseDuration from '../../helpers/getCourseDuration';
-import { v4 as uuidv4 } from 'uuid';
-import formatDate from '../../helpers/formatCreationDate.js';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAppDispatch } from '../../store/hooks.ts';
-import { addNewCourseAction } from '../../store/courses/actions.ts';
-import { addNewAuthorAction } from '../../store/authors/actions.ts';
+import styles from './CourseForm.module.css';
 
-export default function CreateCourse({ initialAuthorList = [] }) {
+export default function CreateCourse() {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
+
+	const authorList = useAppSelector(getAuthorsList);
+	const { courseId } = useParams();
+	const isEditMode = Boolean(courseId);
+
+	useEffect(() => {
+		dispatch(fetchAllAuthors());
+	}, [dispatch]);
 
 	const [form, setForm] = useState({
 		title: '',
@@ -22,41 +30,40 @@ export default function CreateCourse({ initialAuthorList = [] }) {
 		authorName: '',
 	});
 	const [errors, setErrors] = useState({});
-	const [availableAuthors, setAvailableAuthors] = useState(initialAuthorList);
 	const [selectedAuthors, setSelectedAuthors] = useState([]);
 
-	const handleChange = (event) => {
-		const { name, value } = event.target;
+	const selectedAuthorsId = selectedAuthors.map((a) => a.id);
+
+	const availableAuthors = authorList.filter(
+		(a) => !selectedAuthorsId.includes(a.id)
+	);
+
+	const handleChange = ({ target: { name, value } }) => {
 		if (name === 'duration' && value && !/^\d*$/.test(value)) return;
 		setForm((f) => ({ ...f, [name]: value }));
-		setErrors((err) => ({ ...err, [name]: '' }));
+		setErrors((e) => ({ ...e, [name]: '' }));
 	};
 
 	const handleCreateAuthor = () => {
-		if (form.authorName.trim().length < 2) {
-			setErrors((err) => ({
-				...err,
-				authorName: 'At least 2 characters',
-			}));
+		const name = form.authorName.trim();
+		if (name.length < 2) {
+			setErrors((e) => ({ ...e, authorName: 'At least 2 characters' }));
 			return;
 		}
-		const newAuthor = {
-			id: uuidv4(),
-			name: form.authorName.trim(),
-		};
-		dispatch(addNewAuthorAction(newAuthor));
-		setAvailableAuthors((a) => [...a, newAuthor]);
+		dispatch(addAuthor(name))
+			.then(() => dispatch(fetchAllAuthors()))
+			.catch((err) => {
+				console.error('Failed to create author', err);
+			});
 		setForm((f) => ({ ...f, authorName: '' }));
 	};
 
 	const handleAddAuthor = (author) => {
 		setSelectedAuthors((s) => [...s, author]);
-		setAvailableAuthors((a) => a.filter((x) => x.id !== author.id));
 	};
 
 	const handleRemoveAuthor = (author) => {
-		setAvailableAuthors((a) => [...a, author]);
-		setSelectedAuthors((s) => s.filter((x) => x.id !== author.id));
+		setSelectedAuthors((s) => s.filter((a) => a.id !== author.id));
 	};
 
 	const handleDurationChange = (e) => {
@@ -65,8 +72,8 @@ export default function CreateCourse({ initialAuthorList = [] }) {
 		setErrors((e) => ({ ...e, duration: '' }));
 	};
 
-	const handleSubmit = (event) => {
-		event.preventDefault();
+	const handleSubmit = (e) => {
+		e.preventDefault();
 		const newErrors = {};
 		if (form.title.trim().length < 2)
 			newErrors.title = 'Title is required.';
@@ -74,7 +81,7 @@ export default function CreateCourse({ initialAuthorList = [] }) {
 			newErrors.description = 'Description is required.';
 		if (!parseInt(form.duration, 10))
 			newErrors.duration = 'Duration is required.';
-		if (!selectedAuthors.length)
+		if (!selectedAuthorsId.length)
 			newErrors.authors = 'Pick at least one author.';
 
 		if (Object.keys(newErrors).length) {
@@ -83,23 +90,27 @@ export default function CreateCourse({ initialAuthorList = [] }) {
 		}
 
 		const newCourse = {
-			id: uuidv4(),
-			title: form.title,
-			description: form.description,
+			title: form.title.trim(),
+			description: form.description.trim(),
 			duration: parseInt(form.duration, 10),
-			authors: selectedAuthors,
-			creationDate: formatDate(),
+			authors: selectedAuthorsId,
 		};
 
-		dispatch(addNewCourseAction(newCourse));
-
-		navigate('/courses');
+		if (isEditMode) {
+			dispatch(updateCourse(courseId, newCourse)).then(() =>
+				navigate('/courses')
+			);
+		} else {
+			dispatch(addCourse(newCourse)).then(() => navigate('/courses'));
+		}
 	};
 
 	return (
 		<div className={styles.container}>
 			<div className={styles.wrapper}>
-				<h2 className={styles.title}>Course Edit/Create Page</h2>
+				<h2 className={styles.title}>
+					{isEditMode ? 'Edit Course' : 'Create Course'}
+				</h2>
 				<form className={styles.form} onSubmit={handleSubmit}>
 					<div className={styles.form_container}>
 						<h3 className={styles.title_formInfo}>Main info</h3>
@@ -162,6 +173,7 @@ export default function CreateCourse({ initialAuthorList = [] }) {
 										buttonText="create author"
 									/>
 								</div>
+
 								<h4 className={styles.authors_title}>
 									Authors List
 								</h4>
@@ -179,6 +191,7 @@ export default function CreateCourse({ initialAuthorList = [] }) {
 									<p>No authors</p>
 								)}
 							</div>
+
 							<div className={styles.course_authors}>
 								<h4 className={styles.title_formInfo}>
 									Course Authors
@@ -204,7 +217,10 @@ export default function CreateCourse({ initialAuthorList = [] }) {
 						<Link to="/courses">
 							<Button buttonText="cancel" />
 						</Link>
-						<Button buttonText="create course" type="submit" />
+						<Button
+							buttonText={isEditMode ? 'Update' : 'Create'}
+							type="submit"
+						/>
 					</div>
 				</form>
 			</div>

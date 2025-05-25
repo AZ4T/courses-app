@@ -4,7 +4,8 @@ import styles from './Login.module.css';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../store/hooks.ts';
-import { saveUserAction } from '../../store/user/actions.ts';
+import { getUserSuccessAction } from '../../store/user/actions.ts';
+import { fetchCurrentUser } from '../../store/user/thunk.ts';
 
 export default function Login() {
 	const dispatch = useAppDispatch();
@@ -42,15 +43,17 @@ export default function Login() {
 			const { result, user, message } = data;
 			if (!resp.ok) throw new Error(message || 'Login failed');
 			dispatch(
-				saveUserAction({
+				getUserSuccessAction({
 					isAuth: true,
 					name: user.name,
 					email: user.email,
 					token: result,
+					role: '',
 				})
 			);
 			localStorage.setItem('token', result);
-			console.log('🔑 login succeeded, redirecting…');
+			await dispatch(fetchCurrentUser());
+
 			navigate('/courses');
 		} catch (err) {
 			alert(err);

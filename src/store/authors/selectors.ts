@@ -1,5 +1,8 @@
 import { RootState } from '../rootReducer';
 
-export const getAuthors = (state: RootState) => state.authors;
 export const getAuthorById = (authorId: string) => (state: RootState) =>
-	state.authors.find((a) => a.id === authorId);
+	state.authors.list.find((a) => a.id === authorId);
+
+export const getAuthorsList = (state: RootState) => state.authors.list;
+export const getAuthorsLoading = (state: RootState) => state.authors.loading;
+export const getAuthorsError = (state: RootState) => state.authors.error;

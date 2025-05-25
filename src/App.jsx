@@ -1,32 +1,16 @@
-import { useEffect } from 'react';
 import { Navigate, Routes, Route } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Courses from './components/Courses/Courses';
 import CourseInfo from './components/CourseInfo/CourseInfo';
-import EmptyCourseList from './components/EmptyCourseList/EmptyCourseList';
-import CreateCourse from './components/CreateCourse/CreateCourse';
+import CourseForm from './components/CourseForm/CourseForm.jsx';
 import Registration from './components/Registration/Registration';
 import Login from './components/Login/Login';
-import { useAppDispatch, useAppSelector } from './store/hooks.ts';
-import { getToken } from './store/user/selectors.ts';
-import { saveUserAction } from './store/user/actions.ts';
+import PrivateRoute from './components/PrivateRoute/PrivateRoute.tsx';
+import { useAppSelector } from './store/hooks.ts';
+import { getIsAuth } from './store/user/selectors.ts';
 
 export default function App() {
-	const token = useAppSelector(getToken);
-	const dispatch = useAppDispatch();
-	useEffect(() => {
-		const token = localStorage.getItem('token');
-		if (token) {
-			dispatch(
-				saveUserAction({
-					isAuth: true,
-					token,
-					name: localStorage.getItem('userName') || '',
-					email: localStorage.getItem('userEmail') || '',
-				})
-			);
-		}
-	}, [dispatch]);
+	const isAuth = useAppSelector(getIsAuth);
 	return (
 		<>
 			<Header />
@@ -36,33 +20,30 @@ export default function App() {
 				<Route
 					path="/courses"
 					element={
-						token ? <Courses /> : <Navigate to="/login" replace />
-					}
-				/>
-				<Route
-					path="/courses/add"
-					element={
-						token ? (
-							<CreateCourse />
-						) : (
-							<Navigate to="/login" replace />
-						)
+						isAuth ? <Courses /> : <Navigate to="/login" replace />
 					}
 				/>
 				<Route
 					path="/courses/:courseId"
 					element={
-						token ? (
+						isAuth ? (
 							<CourseInfo />
 						) : (
 							<Navigate to="/login" replace />
 						)
 					}
 				/>
+				<Route element={<PrivateRoute />}>
+					<Route path="/courses/add" element={<CourseForm />} />
+					<Route
+						path="/courses/update/:courseId"
+						element={<CourseForm />}
+					/>
+				</Route>
 				<Route
 					path="/"
 					element={
-						token ? (
+						isAuth ? (
 							<Navigate to="/courses" />
 						) : (
 							<Navigate to="/login" />

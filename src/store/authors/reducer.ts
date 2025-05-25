@@ -1,18 +1,42 @@
-import { AuthorsAction, AuthorsActionTypes, AuthorType } from './types.ts';
+import { AuthorsAction, AuthorsActionTypes, AuthorsState } from './types.ts';
 
-export const authorsInitialState = [] as AuthorType[];
+export const authorsInitialState: AuthorsState = {
+	list: [],
+	loading: false,
+	error: '',
+};
 export function authorsReducer(
 	state = authorsInitialState,
 	action: AuthorsAction
-) {
+): AuthorsState {
 	switch (action.type) {
-        case AuthorsActionTypes.SAVE_AUTHORS:
-            return action.payload;
-		case AuthorsActionTypes.ADD_AUTHOR:
-			return [...state, action.payload];
-        case AuthorsActionTypes.DELETE_AUTHOR:
-            return [...state].filter((author) => action.payload !== author.id);
-        default:
-            return state;
+		case AuthorsActionTypes.GET_AUTHORS_REQUEST:
+			return { ...state, loading: true, error: '' };
+		case AuthorsActionTypes.GET_AUTHORS_SUCCESS:
+			return {
+				...state,
+				loading: false,
+				list: action.payload,
+				error: '',
+			};
+		case AuthorsActionTypes.GET_AUTHORS_FAILURE:
+			return {
+				...state,
+				loading: false,
+				error: action.payload,
+			};
+		case AuthorsActionTypes.ADD_AUTHOR_SUCCESS:
+			return {
+				...state,
+				list: [...state.list, action.payload],
+				loading: false,
+				error: null,
+			};
+		case AuthorsActionTypes.ADD_AUTHOR_REQUEST:
+			return { ...state, loading: true, error: null };
+		case AuthorsActionTypes.ADD_AUTHOR_FAILURE:
+			return { ...state, loading: false, error: action.payload };
+		default:
+			return state;
 	}
 }

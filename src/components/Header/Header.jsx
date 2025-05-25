@@ -2,9 +2,9 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Logo from './components/Logo/Logo.jsx';
 import Button from '../../common/Button/Button.jsx';
 import styles from './Header.module.css';
-import { saveUserAction } from '../../store/user/actions.ts';
 import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
 import { getUserName } from '../../store/user/selectors.ts';
+import { logoutUser } from '../../store/user/thunk.ts';
 
 export default function Header() {
 	const navigate = useNavigate();
@@ -17,15 +17,7 @@ export default function Header() {
 	}
 
 	const handleLogout = () => {
-		dispatch(
-			saveUserAction({
-				isAuth: false,
-				name: '',
-				email: '',
-				token: '',
-			})
-		);
-		localStorage.setItem('token', '');
+		dispatch(logoutUser());
 		navigate('/login', { replace: true });
 	};
 

@@ -5,51 +5,57 @@ import Button from '../../common/Button/Button.jsx';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
 import { useEffect } from 'react';
-import { getCourses } from '../../store/courses/selectors.ts';
-import { getAuthors } from '../../store/authors/selectors.ts';
-import { saveAuthorsAction } from '../../store/authors/actions.ts';
-import { saveCoursesAction } from '../../store/courses/actions.ts';
+import {
+	getCoursesList,
+	getCoursesLoading,
+} from '../../store/courses/selectors.ts';
+import { getAuthorsList } from '../../store/authors/selectors.ts';
+import EmptyCourseList from '../EmptyCourseList/EmptyCourseList.jsx';
+import { fetchAllCourses } from '../../store/courses/thunk.ts';
+import { fetchAllAuthors } from '../../store/authors/thunk.ts';
+import {
+	getIsAuth,
+	getIsLoading,
+	getRole,
+} from '../../store/user/selectors.ts';
 
 export default function Courses() {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
-	const coursesList = useAppSelector(getCourses);
-	const authorsList = useAppSelector(getAuthors);
+
+	const coursesList = useAppSelector(getCoursesList);
+	const authorsList = useAppSelector(getAuthorsList);
+
+	const role = useAppSelector(getRole);
+	const isAuth = useAppSelector(getIsAuth);
+	const userLoading = useAppSelector(getIsLoading);
+	const coursesLoading = useAppSelector(getCoursesLoading);
 
 	useEffect(() => {
-		fetch('http://localhost:4000/courses/all')
-			.then((res) => {
-				if (!res.ok) throw new Error('Failed to load courses');
-				return res.json();
-			})
-			.then((json) => dispatch(saveCoursesAction(json.result)))
-			.catch((err) => {
-				console.error(err);
-				alert(err);
-			});
-		fetch('http://localhost:4000/authors/all')
-			.then((res) => {
-				if (!res.ok) throw new Error('Failed to load authors');
-				return res.json();
-			})
-			.then((json) => dispatch(saveAuthorsAction(json.result)))
-			.catch((err) => {
-				console.error(err);
-				alert(err);
-			});
-	}, [dispatch]);
+		if (!isAuth) {
+			navigate('/login', { replace: true });
+			return;
+		}
+		dispatch(fetchAllCourses());
+		dispatch(fetchAllAuthors());
+	}, [dispatch, isAuth, navigate]);
 
-	return (
+	if (userLoading || coursesLoading) {
+		return <div>Loading…</div>;
+	}
+
+	return coursesList.length ? (
 		<div className={styles.wrapper}>
 			<div className={styles.container}>
 				<div className={styles.header}>
 					<SearchBar />
-					<Button
-						onClick={() => navigate('/courses/add')}
-						buttonText="Add new course"
-					/>
+					{role === 'admin' && (
+						<Button
+							onClick={() => navigate('/courses/add')}
+							buttonText="Add new course"
+						/>
+					)}
 				</div>
-
 				<div className={styles.cardsContainer}>
 					{coursesList.map((course) => (
 						<CourseCard
@@ -61,5 +67,7 @@ export default function Courses() {
 				</div>
 			</div>
 		</div>
+	) : (
+		<EmptyCourseList />
 	);
 }
