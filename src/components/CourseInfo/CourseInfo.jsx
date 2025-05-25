@@ -4,12 +4,12 @@ import Button from '../../common/Button/Button';
 import styles from './CourseInfo.module.css';
 import { useAppSelector } from '../../store/hooks.ts';
 import { getCourseById } from '../../store/courses/selectors.ts';
-import { getAuthors } from '../../store/authors/selectors.ts';
+import { getAuthorsList } from '../../store/authors/selectors.ts';
 
 export default function CourseInfo() {
 	const { courseId } = useParams();
 	const course = useAppSelector(getCourseById(courseId));
-	const authors = useAppSelector(getAuthors);
+	const authors = useAppSelector(getAuthorsList);
 
 	if (!course || !authors) {
 		return <p>Loading…</p>;

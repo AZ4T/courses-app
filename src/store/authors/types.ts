@@ -1,7 +1,10 @@
 export const enum AuthorsActionTypes {
-	SAVE_AUTHORS = 'SAVE_AUTHORS',
-	ADD_AUTHOR = 'ADD_AUTHOR',
-	DELETE_AUTHOR = 'DELETE_AUTHOR',
+	GET_AUTHORS_REQUEST = 'GET_AUTHORS_REQUEST',
+	GET_AUTHORS_SUCCESS = 'GET_AUTHORS_SUCCESS',
+	GET_AUTHORS_FAILURE = 'GET_AUTHORS_FAILURE',
+	ADD_AUTHOR_REQUEST = 'ADD_AUTHOR_REQUEST',
+	ADD_AUTHOR_SUCCESS = 'ADD_AUTHOR_SUCCESS',
+	ADD_AUTHOR_FAILURE = 'ADD_AUTHOR_FAILURE',
 }
 
 export type AuthorType = {
@@ -13,19 +16,42 @@ export type AuthorValues = {
 	payload: string | AuthorType | AuthorType[];
 };
 
-type SaveAuthors = {
-	type: AuthorsActionTypes.SAVE_AUTHORS;
+export type AuthorsState = {
+	list: AuthorType[];
+	loading: boolean;
+	error: string | null;
+};
+
+export type GetAuthorsRequestAction = {
+	type: AuthorsActionTypes.GET_AUTHORS_REQUEST;
+};
+
+export type GetAuthorsSuccessAction = {
+	type: AuthorsActionTypes.GET_AUTHORS_SUCCESS;
 	payload: AuthorType[];
 };
 
-type AddAuthor = {
-	type: AuthorsActionTypes.ADD_AUTHOR;
+export type GetAuthorsFailureAction = {
+	type: AuthorsActionTypes.GET_AUTHORS_FAILURE;
+	payload: string;
+};
+
+export type AddAuthorsRequestAction = {
+	type: AuthorsActionTypes.ADD_AUTHOR_REQUEST;
+};
+export type AddAuthorsSuccessAction = {
+	type: AuthorsActionTypes.ADD_AUTHOR_SUCCESS;
 	payload: AuthorType;
 };
-
-type DeleteAuthor = {
-	type: AuthorsActionTypes.DELETE_AUTHOR;
-    payload: string;
+export type AddAuthorsFailureAction = {
+	type: AuthorsActionTypes.ADD_AUTHOR_FAILURE;
+	payload: string;
 };
 
-export type AuthorsAction = SaveAuthors | AddAuthor | DeleteAuthor;
+export type AuthorsAction =
+	| GetAuthorsFailureAction
+	| GetAuthorsRequestAction
+	| GetAuthorsSuccessAction
+	| AddAuthorsRequestAction
+	| AddAuthorsSuccessAction
+	| AddAuthorsFailureAction;

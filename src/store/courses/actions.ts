@@ -1,37 +1,88 @@
-import { CoursesActionTypes, CourseType, CourseValues } from './types.ts';
+import {
+	GetCoursesRequestAction,
+	GetCoursesSuccessAction,
+	GetCoursesFailureAction,
+	CourseType,
+	CoursesActionTypes,
+	DeleteCourseRequestAction,
+	DeleteCourseSuccessAction,
+	DeleteCourseFailureAction,
+	AddCourseRequestAction,
+	AddCourseSuccessAction,
+	AddCourseFailureAction,
+	UpdateCourseRequestAction,
+	UpdateCourseSuccessAction,
+	UpdateCourseFailureAction,
+} from './types.ts';
 
-type AddNewCourseAction = {
-	type: CoursesActionTypes.ADD_COURSE;
-	payload: CourseValues;
-};
+export const getCoursesRequestAction = (): GetCoursesRequestAction => ({
+	type: CoursesActionTypes.GET_COURSES_REQUEST,
+});
 
-type DeleteCourseAction = {
-	type: CoursesActionTypes.DELETE_COURSE;
-	payload: CourseValues;
-};
+export const getCoursesSuccessAction = (
+	payload: CourseType[]
+): GetCoursesSuccessAction => ({
+	type: CoursesActionTypes.GET_COURSES_SUCCESS,
+	payload,
+});
 
-type SaveCoursesAction = {
-	type: CoursesActionTypes.SAVE_COURSES;
-	payload: CourseValues;
-};
+export const getCoursesFailureAction = (
+	payload: string
+): GetCoursesFailureAction => ({
+	type: CoursesActionTypes.GET_COURSES_FAILURE,
+	payload,
+});
 
-export const addNewCourseAction = (
-	payload: CourseValues
-): AddNewCourseAction => ({
-	type: CoursesActionTypes.ADD_COURSE,
+export const deleteCourseRequestAction = (): DeleteCourseRequestAction => ({
+	type: CoursesActionTypes.DELETE_COURSE_REQUEST,
+});
+
+export const deleteCourseSuccessAction = (
+	id: string
+): DeleteCourseSuccessAction => ({
+	type: CoursesActionTypes.DELETE_COURSE_SUCCESS,
+	payload: id,
+});
+
+export const deleteCourseFailureAction = (
+	payload: string
+): DeleteCourseFailureAction => ({
+	type: CoursesActionTypes.DELETE_COURSE_FAILURE,
+	payload,
+});
+
+export const addCourseRequestAction = (): AddCourseRequestAction => ({
+	type: CoursesActionTypes.ADD_COURSE_REQUEST,
+});
+
+export const addCourseSuccessAction = (
+	payload: CourseType
+): AddCourseSuccessAction => ({
+	type: CoursesActionTypes.ADD_COURSE_SUCCESS,
 	payload: payload,
 });
 
-export const deleteCourseAction = (
-	payload: CourseValues
-): DeleteCourseAction => ({
-	type: CoursesActionTypes.DELETE_COURSE,
+export const addCourseFailureAction = (
+	payload: string
+): AddCourseFailureAction => ({
+	type: CoursesActionTypes.ADD_COURSE_FAILURE,
 	payload: payload,
 });
 
-export const saveCoursesAction = (
-    payload: CourseValues
-): SaveCoursesAction => ({
-    type: CoursesActionTypes.SAVE_COURSES,
-    payload: payload,
-})
+export const updateCourseRequestAction = (): UpdateCourseRequestAction => ({
+	type: CoursesActionTypes.UPDATE_COURSE_REQUEST,
+});
+
+export const updateCourseSuccessAction = (
+	payload: CourseType
+): UpdateCourseSuccessAction => ({
+	type: CoursesActionTypes.UPDATE_COURSE_SUCCESS,
+	payload: payload,
+});
+
+export const updateCourseFailureAction = (
+	payload: string
+): UpdateCourseFailureAction => ({
+	type: CoursesActionTypes.UPDATE_COURSE_FAILURE,
+	payload: payload,
+});
